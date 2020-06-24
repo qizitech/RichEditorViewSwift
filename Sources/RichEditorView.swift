@@ -148,17 +148,18 @@ public class RichEditorWebView: WKWebView {
                          "style.css", "rich_editor.html"]
 
         var cnt = 0
-        fileNames.forEach { s in
-            let sp = s.split(separator: ".").map({ String($0) })
-            let name = sp.first!
-            let ext = sp.last!
+        if let bundleURL = Bundle(for: Self.self).url(forResource: "RichEditorView", withExtension: "bundle"), let bundle = Bundle(url: bundleURL) {
+            fileNames.forEach { s in
+                let sp = s.split(separator: ".").map({ String($0) })
+                let name = sp.first!
+                let ext = sp.last!
 
-            if let url = Bundle.main.url(forResource: name, withExtension: ext, subdirectory: subdirectory) {
-                if #available(iOS 9.0, *) {
-                    webView.loadFileURL(url, allowingReadAccessTo: url)
-                } else {
+                if let url = bundle.url(forResource: name, withExtension: ext, subdirectory: subdirectory) {
+                    if #available(iOS 9.0, *) {
+                        webView.loadFileURL(url, allowingReadAccessTo: url)
+                    }
+                    cnt += 1
                 }
-                cnt += 1
             }
         }
 
